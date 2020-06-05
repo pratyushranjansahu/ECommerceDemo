@@ -5,10 +5,10 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @ComponentScan
@@ -26,8 +26,8 @@ public class CustomerApp {
 
 	@PostConstruct
 	public void generateTestData() {
-		customerRepository.save(new Customer("Rocky", "Sahu", "rocky@gmail.com", "BTM", "Bangalore"));
-		customerRepository.save(new Customer("Bicky", "Sahu", "bicky@gmail.com", "HSR Street", "Bangalore"));
+		customerRepository.save(new Customer("Rocky", "Sahu", "rocky@gmail.com", "BTM", "Bangalore","12345"));
+		customerRepository.save(new Customer("Bicky", "Sahu", "bicky@gmail.com", "HSR Street", "Bangalore","12345"));
 	}
 
 	/*@Bean
@@ -39,5 +39,11 @@ public class CustomerApp {
 
 	public static void main(String[] args) {
 		SpringApplication.run(CustomerApp.class, args);
+	}
+	
+	@Bean
+	public BCryptPasswordEncoder bCryptPasswordEncoder()
+	{
+		return new BCryptPasswordEncoder();
 	}
 }

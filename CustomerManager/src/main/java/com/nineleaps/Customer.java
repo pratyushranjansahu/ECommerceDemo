@@ -34,19 +34,35 @@ public class Customer {
 	@Column(nullable = false)
 	private String city;
 
+	@Column(nullable = false)
+	private String password;
+	
+	
+	
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
 	public Customer() {
 		super();
 		id = 0l;
 	}
 
 	public Customer(String firstname, String name, String email, String street,
-			String city) {
+			String city,String password) {
 		super();
 		this.name = name;
 		this.firstname = firstname;
 		this.email = email;
 		this.street = street;
 		this.city = city;
+		this.password=password;
+		
 	}
 
 	public String getEmail() {
@@ -96,6 +112,8 @@ public class Customer {
 	public void setCity(String city) {
 		this.city = city;
 	}
+	
+	
 
 	@Override
 	public String toString() {

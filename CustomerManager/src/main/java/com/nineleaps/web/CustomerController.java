@@ -5,8 +5,8 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.nineleaps.Customer;
-import com.nineleaps.CustomerRepository;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,13 +14,23 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.nineleaps.Customer;
+import com.nineleaps.CustomerRepository;
+import com.nineleaps.model.CustomerDTO;
+import com.nineleaps.model.CustomerRequestModel;
+import com.nineleaps.model.CustomerResponseModel;
+import com.nineleaps.model.LoginRequestModel;
+import com.nineleaps.service.CustomerService;
 
 @RestController
 public class CustomerController {
 
 	private CustomerRepository customerRepository;
+	
+	@Autowired
+	private CustomerService customerService;
 
 	@Autowired
 	public CustomerController(CustomerRepository customerRepository) {
@@ -40,17 +50,20 @@ public class CustomerController {
 		return customerList;
 	}
 
-	/*
-	 * @RequestMapping(value = "/form.html", method = RequestMethod.GET) public
-	 * ModelAndView add() { return new ModelAndView("customer", "customer", new
-	 * Customer()); }
-	 */
-
 	@PostMapping
-	public Customer addCustomer(@RequestBody Customer customer, HttpServletRequest httpRequest) {
-		customer = customerRepository.save(customer);
-		return customer;
+	public CustomerResponseModel addCustomer(@RequestBody CustomerRequestModel customerRequestModel, HttpServletRequest httpRequest) {
+		ModelMapper modelMapper = new ModelMapper(); 
+		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+		
+		CustomerDTO customerDto = modelMapper.map(customerRequestModel, CustomerDTO.class);
+		
+		CustomerDTO createdUser = customerService.createUser(customerDto);
+
+		CustomerResponseModel customerResponseModel = modelMapper.map(createdUser, CustomerResponseModel.class);
+		return customerResponseModel;
 	}
+	
+	
 
 	@PutMapping("/{id}")
 	public Customer put(@PathVariable("id") long id, @RequestBody Customer customer, HttpServletRequest httpRequest) {
