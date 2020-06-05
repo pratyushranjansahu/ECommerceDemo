@@ -1,0 +1,41 @@
+version: "3"
+services:    
+  eureka:
+    build: 
+        context: .
+        dockerfile: EurekaServer/Dockerfile
+    ports:
+        - 8010:8010
+  zuul:
+    build: 
+        context: .
+        dockerfile: ZuulServer/Dockerfile
+    ports:
+        - 8011:8011
+    links:
+        - eureka   
+  catalogue-manager:
+    build: 
+        context: .
+        dockerfile: CatalogueManager/Dockerfile
+    ports:
+        - 8090:8090
+    links:
+        - eureka
+  customer-manager:
+    build: 
+        context: .
+        dockerfile: CustomerManager/Dockerfile
+    ports:
+        - 8095:8095
+    links:
+        - eureka
+  order-manager:
+    build: 
+        context: .
+        dockerfile: OrderManager/Dockerfile
+    ports:
+        - 8097:8097
+    links:
+        - eureka
+    
